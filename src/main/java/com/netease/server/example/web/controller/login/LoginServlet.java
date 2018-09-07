@@ -21,10 +21,12 @@ public class LoginServlet extends HttpServlet{
         String account = req.getParameter("account");
         String password = req.getParameter("password");
         PrintWriter pw = resp.getWriter();
+        pw.println("account:"+account);
+        pw.println("password:"+password);
         if("admin_zzl".equals(account) && "111111".equals(password)){
-            pw.print("login success");
+            pw.println("login success");
         }else {
-            pw.print("login fail");
+            pw.println("login fail");
         }
     }
 
@@ -33,10 +35,12 @@ public class LoginServlet extends HttpServlet{
         String account = req.getParameter("accountPost");
         String password = req.getParameter("passwordPost");
         PrintWriter pw = resp.getWriter();
+        pw.println("account:"+account);
+        pw.println("password:"+password);
         if("admin_zzl".equals(account) && "111111".equals(password)){
-            pw.print("login success");
+            pw.println("login success");
         }else {
-            pw.print("login fail");
+            pw.println("login fail");
         }
     }
 }
