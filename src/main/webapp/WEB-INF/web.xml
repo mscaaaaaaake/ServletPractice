@@ -37,4 +37,9 @@
 		<param-name>contextParam2</param-name>
 		<param-value>555555555555</param-value>
 	</context-param>
+	<!--配置错误页面显示，显得高大上点-->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error.html</location>
+	</error-page>
 </web-app>
