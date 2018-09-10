@@ -5,9 +5,7 @@ import com.netease.server.example.util.GeneralUtil;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.*;
 import java.net.URL;
 
@@ -49,17 +47,60 @@ public class LoginServlet extends HttpServlet{
 
     }
 
+    /**
+     * cookie and session 练习
+     * @param req
+     * @param resp
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String account = req.getParameter("accountPost");
         String password = req.getParameter("passwordPost");
         PrintWriter pw = resp.getWriter();
-        pw.println("account:"+account);
-        pw.println("password:"+password);
-        if("admin_zzl".equals(account) && "111111".equals(password)){
-            pw.println("login success");
-        }else {
-            pw.println("login fail");
+
+        //黄建cookie对象
+        Cookie cookieUserName = new Cookie("userName",account);
+        //cookie有效期三十分钟
+        cookieUserName.setMaxAge(30 * 60);
+        //添加至返回
+        resp.addCookie(cookieUserName);
+        //第二次访问时获取浏览器带过来的cookie对象
+        Cookie[] cookies = req.getCookies();
+        //检测是否存在两cookie并赋值
+        if(cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("userName".equals(cookie.getName())) {
+                    if(!cookie.getValue().equals(account)){
+                        System.out.println("当前用户名："+account+"，与cookie存储不一致");
+                    }
+                    account = cookie.getValue();
+                }
+            }
         }
+        //session
+        //第一次登录
+        HttpSession httpSession = req.getSession();
+        httpSession.setAttribute("pwd",password);
+        //第二次登录
+        httpSession.removeAttribute("pwd");
+
+        pw.print("<html>");
+        pw.print("<body>");
+        pw.print("<div style='text-align: center;'>");
+        if("admin_zzl".equals(account) && "111111".equals(password)){
+
+            pw.print("<p>account:" +  account + "</p>");
+            pw.print("<br>");
+            pw.print("<p>password:" + password + "</p>");
+            pw.print("<br>");
+            pw.print("<p style='color:green;'>login success</p>");
+        }else{
+            pw.print("<p style='color:red;'>login fail</p>");
+        }
+        pw.print("</div>");
+        pw.print("</body>");
+        pw.print("</html>");
     }
 }
